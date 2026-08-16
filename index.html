@@ -1,0 +1,2338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PennyWise — Smart Budgeting Made Simple</title>
+    <meta name="description" content="PennyWise helps you track expenses, create budgets, and save more — all in one beautifully designed app. Download the APK now.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+                   CSS CUSTOM PROPERTIES — DESIGN SYSTEM
+                   ============================================ */
+        :root {
+            --bg-primary: #0B0B0F;
+            --bg-secondary: #111116;
+            --bg-surface: #16161C;
+            --bg-card: rgba(255, 255, 255, 0.025);
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-hover: rgba(255, 255, 255, 0.14);
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --accent-primary: #10B981;
+            --accent-primary-hover: #059669;
+            --accent-secondary: #34D399;
+            --accent-tertiary: #6EE7B7;
+            --accent-gold: #FBBF24;
+            --accent-gold-hover: #F59E0B;
+            --gradient-hero: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%);
+            --gradient-gold: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+            --gradient-dark: linear-gradient(180deg, rgba(11, 11, 15, 0) 0%, rgba(11, 11, 15, 1) 100%);
+            --shadow-glow: 0 0 60px rgba(16, 185, 129, 0.15);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.6);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-medium: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            --nav-height: 72px;
+            --container-width: 1200px;
+        }
+
+        /* ============================================
+                   RESET & BASE STYLES
+                   ============================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: default;
+        }
+
+        ::selection {
+            background: var(--accent-primary);
+            color: #fff;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition-fast);
+        }
+
+        button {
+            font-family: var(--font-family);
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+            transition: var(--transition-fast);
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        ul,
+        ol {
+            list-style: none;
+        }
+
+        /* ============================================
+                   UTILITY CLASSES
+                   ============================================ */
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-secondary);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .section-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.5);
+            }
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: clamp(1rem, 1.5vw, 1.15rem);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #34D399 0%, #10B981 40%, #FBBF24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ============================================
+                   NOISE TEXTURE OVERLAY
+                   ============================================ */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-size: 256px 256px;
+        }
+
+        /* ============================================
+                   ANIMATED BACKGROUND ORBS
+                   ============================================ */
+        .bg-orbs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: orb-float 20s ease-in-out infinite;
+        }
+
+        .bg-orb:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%);
+            top: -200px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-orb:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%);
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -7s;
+        }
+
+        .bg-orb:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.25) 0%, transparent 70%);
+            top: 40%;
+            right: 20%;
+            animation-delay: -14s;
+        }
+
+        @keyframes orb-float {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(50px, -30px) scale(1.05);
+            }
+            50% {
+                transform: translate(-20px, 40px) scale(0.95);
+            }
+            75% {
+                transform: translate(30px, 20px) scale(1.03);
+            }
+        }
+
+        /* ============================================
+                   NAVIGATION
+                   ============================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: var(--nav-height);
+            background: rgba(11, 11, 15, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: var(--transition-medium);
+        }
+
+        .navbar.scrolled {
+            background: rgba(11, 11, 15, 0.9);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: -0.02em;
+        }
+
+        .navbar-brand .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-hero);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .navbar-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            position: relative;
+            padding: 4px 0;
+        }
+
+        .navbar-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            border-radius: 1px;
+            transition: var(--transition-medium);
+        }
+
+        .navbar-links a:hover {
+            color: var(--text-primary);
+        }
+        .navbar-links a:hover::after {
+            width: 100%;
+        }
+
+        .navbar-cta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.01em;
+            transition: var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--gradient-hero);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.5);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            backdrop-filter: blur(10px);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-gold {
+            background: var(--gradient-gold);
+            color: #1a1a1a;
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.35);
+            font-weight: 700;
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(251, 191, 36, 0.5);
+        }
+
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 1rem;
+        }
+
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-subtle);
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            transition: var(--transition-fast);
+        }
+        .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .menu-toggle.active {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: var(--nav-height);
+            left: 0;
+            right: 0;
+            background: rgba(11, 11, 15, 0.98);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 16px 24px;
+            z-index: 999;
+            flex-direction: column;
+            gap: 4px;
+            transform: translateY(-10px);
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition-medium);
+        }
+        .mobile-menu.open {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+        .mobile-menu a {
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition-fast);
+        }
+        .mobile-menu a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+        .mobile-menu .btn {
+            margin-top: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* ============================================
+                   HERO SECTION
+                   ============================================ */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: var(--nav-height);
+            z-index: 1;
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .hero-content {
+            animation: fade-in-up 0.8s ease-out forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1.05;
+            margin-bottom: 20px;
+        }
+
+        .hero-description {
+            font-size: clamp(1rem, 1.3vw, 1.2rem);
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 500px;
+            margin-bottom: 32px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+
+        .hero-trust {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .hero-trust .stars {
+            display: flex;
+            gap: 2px;
+            color: var(--accent-gold);
+            font-size: 1.05rem;
+        }
+        .hero-trust .trust-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Phone Mockup */
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fade-in-up 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 610px;
+            background: var(--bg-surface);
+            border-radius: 44px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5), 0 0 120px rgba(16, 185, 129, 0.08);
+            padding: 12px;
+            position: relative;
+            animation: phone-float 4s ease-in-out infinite;
+            transition: var(--transition-medium);
+        }
+        .phone-mockup:hover {
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 160px rgba(16, 185, 129, 0.15);
+        }
+
+        @keyframes phone-float {
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-12px) rotate(0.5deg);
+            }
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 28px;
+            background: #000;
+            border-radius: 0 0 16px 16px;
+            z-index: 10;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 32px;
+            background: var(--bg-secondary);
+            overflow: hidden;
+            padding: 40px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .phone-balance-card {
+            background: var(--gradient-hero);
+            border-radius: var(--radius-lg);
+            padding: 20px 18px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .phone-balance-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .phone-balance-card .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            opacity: 0.8;
+            font-weight: 600;
+        }
+        .phone-balance-card .amount {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-top: 2px;
+        }
+        .phone-balance-card .change {
+            font-size: 0.75rem;
+            opacity: 0.85;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .phone-section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .phone-transactions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .phone-tx {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+            padding: 10px 12px;
+        }
+        .phone-tx .tx-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .phone-tx .tx-icon.green {
+            background: rgba(16, 185, 129, 0.15);
+        }
+        .phone-tx .tx-icon.red {
+            background: rgba(239, 68, 68, 0.15);
+        }
+        .phone-tx .tx-icon.gold {
+            background: rgba(251, 191, 36, 0.15);
+        }
+        .phone-tx .tx-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .phone-tx .tx-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .phone-tx .tx-category {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .phone-tx .tx-amount {
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .phone-tx .tx-amount.positive {
+            color: var(--accent-secondary);
+        }
+        .phone-tx .tx-amount.negative {
+            color: #F87171;
+        }
+
+        .phone-bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 4px 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: auto;
+        }
+        .phone-bottom-nav span {
+            font-size: 1.1rem;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        .phone-bottom-nav span.active {
+            opacity: 1;
+        }
+        .phone-bottom-nav span:hover {
+            opacity: 0.8;
+        }
+
+        /* Floating Elements around phone */
+        .floating-chip {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-card);
+            animation: float-chip 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .floating-chip .chip-icon {
+            font-size: 1.1rem;
+        }
+        .floating-chip.chip-1 {
+            top: 10%;
+            right: -10%;
+            animation-delay: 0s;
+        }
+        .floating-chip.chip-2 {
+            bottom: 20%;
+            left: -12%;
+            animation-delay: -1.5s;
+        }
+        .floating-chip.chip-3 {
+            bottom: 5%;
+            right: -5%;
+            animation-delay: -3s;
+        }
+
+        @keyframes float-chip {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================
+                   STATS SECTION
+                   ============================================ */
+        .stats-section {
+            padding: 80px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 32px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            transition: var(--transition-medium);
+        }
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card);
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 0%, #A1A1AA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* ============================================
+                   FEATURES SECTION
+                   ============================================ */
+        .features-section {
+            padding: 80px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 32px 28px;
+            transition: var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-hero);
+            opacity: 0;
+            transition: var(--transition-medium);
+            border-radius: 3px 3px 0 0;
+        }
+        .feature-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card-hover);
+        }
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+        .feature-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
+        }
+        .feature-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+                   HOW IT WORKS SECTION
+                   ============================================ */
+        .how-section {
+            padding: 80px 0;
+            position: relative;
+            z-index: 1;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 48px;
+        }
+        .step-card {
+            text-align: center;
+            padding: 32px 24px;
+            position: relative;
+        }
+        .step-number {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--gradient-hero);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: #fff;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
+            position: relative;
+            z-index: 2;
+        }
+        .step-card:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 50px;
+            left: calc(50% + 48px);
+            width: calc(100% - 96px);
+            height: 2px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 1px;
+            z-index: 1;
+        }
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .step-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+                   TESTIMONIALS SECTION
+                   ============================================ */
+        .testimonials-section {
+            padding: 80px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+        }
+        .testimonial-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            transition: var(--transition-medium);
+        }
+        .testimonial-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-card);
+        }
+        .testimonial-stars {
+            color: var(--accent-gold);
+            font-size: 1rem;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+        .testimonial-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-hero);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .testimonial-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .testimonial-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+                   FAQ SECTION
+                   ============================================ */
+        .faq-section {
+            padding: 80px 0;
+            position: relative;
+            z-index: 1;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .faq-list {
+            max-width: 720px;
+            margin: 40px auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition-medium);
+        }
+        .faq-item:hover {
+            border-color: var(--border-hover);
+        }
+        .faq-item.active {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .faq-question {
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition-fast);
+            gap: 16px;
+            user-select: none;
+        }
+        .faq-question:hover {
+            color: var(--accent-secondary);
+        }
+        .faq-icon {
+            font-size: 1.2rem;
+            transition: var(--transition-medium);
+            flex-shrink: 0;
+            color: var(--text-muted);
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            color: var(--accent-primary);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1), padding 0.3s ease;
+            padding: 0 24px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 0 24px 18px;
+        }
+
+        /* ============================================
+                   CTA BANNER
+                   ============================================ */
+        .cta-section {
+            padding: 80px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-banner {
+            background: var(--gradient-hero);
+            border-radius: var(--radius-xl);
+            padding: 56px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.25);
+        }
+        .cta-banner::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .cta-banner .cta-title {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #fff;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-banner .cta-description {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-banner .btn {
+            position: relative;
+            z-index: 1;
+        }
+        .cta-banner .btn-gold {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ============================================
+                   FOOTER
+                   ============================================ */
+        .footer {
+            padding: 40px 0 24px;
+            border-top: 1px solid var(--border-subtle);
+            position: relative;
+            z-index: 1;
+            background: var(--bg-primary);
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .footer-brand .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-hero);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+        .footer-links {
+            display: flex;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+        .footer-column h4 {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .footer-column a {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .footer-column a:hover {
+            color: var(--text-primary);
+        }
+        .footer-bottom {
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+                   DOWNLOAD PAGE (VIEW 2)
+                   ============================================ */
+        .download-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-primary);
+            z-index: 2000;
+            overflow-y: auto;
+            display: none;
+            animation: fade-in 0.4s ease-out;
+        }
+        .download-view.active {
+            display: block;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .download-view .download-nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(11, 11, 15, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 16px 0;
+        }
+        .download-view .download-nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .download-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 72px);
+            padding: 40px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .download-card {
+            max-width: 560px;
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            text-align: center;
+            box-shadow: var(--shadow-card-hover);
+            position: relative;
+            overflow: hidden;
+        }
+        .download-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-hero);
+        }
+        .download-app-icon {
+            width: 96px;
+            height: 96px;
+            border-radius: var(--radius-xl);
+            background: var(--gradient-hero);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 20px;
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.35);
+        }
+        .download-app-name {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .download-version {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-secondary);
+            margin-top: 8px;
+        }
+        .download-meta {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin: 20px 0 28px;
+            flex-wrap: wrap;
+        }
+        .download-meta-item {
+            text-align: center;
+        }
+        .download-meta-item .meta-value {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .download-meta-item .meta-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .download-btn-wrapper {
+            margin-bottom: 20px;
+        }
+        .download-progress {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 16px;
+            opacity: 0;
+            transition: var(--transition-medium);
+        }
+        .download-progress.visible {
+            opacity: 1;
+        }
+        .download-progress-bar {
+            height: 100%;
+            background: var(--gradient-hero);
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .download-note {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 16px;
+        }
+        .download-note a {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+        .download-note a:hover {
+            color: var(--accent-tertiary);
+        }
+
+        .download-requirements {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 28px;
+            text-align: left;
+        }
+        .download-req-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .download-req-item .req-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* ============================================
+                   SCROLL REVEAL ANIMATIONS
+                   ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 {
+            transition-delay: 0.1s;
+        }
+        .reveal-delay-2 {
+            transition-delay: 0.2s;
+        }
+        .reveal-delay-3 {
+            transition-delay: 0.3s;
+        }
+        .reveal-delay-4 {
+            transition-delay: 0.4s;
+        }
+
+        /* ============================================
+                   RESPONSIVE DESIGN
+                   ============================================ */
+        @media (max-width: 1024px) {
+            .hero .container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            .hero-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .hero-actions {
+                justify-content: center;
+            }
+            .hero-trust {
+                justify-content: center;
+            }
+            .hero-visual {
+                margin-top: 20px;
+            }
+            .floating-chip.chip-1 {
+                right: 5%;
+                top: -5%;
+            }
+            .floating-chip.chip-2 {
+                left: 5%;
+                bottom: -5%;
+            }
+            .floating-chip.chip-3 {
+                right: 10%;
+                bottom: -10%;
+            }
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .steps-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .step-card:not(:last-child)::after {
+                display: none;
+            }
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
+            .navbar-cta .btn {
+                display: none;
+            }
+            .navbar-cta .menu-toggle {
+                display: flex;
+            }
+            .mobile-menu {
+                display: flex;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .stat-number {
+                font-size: 1.8rem;
+            }
+            .phone-mockup {
+                width: 260px;
+                height: 530px;
+                border-radius: 36px;
+                padding: 10px;
+            }
+            .phone-screen {
+                border-radius: 28px;
+                padding: 32px 12px 12px;
+            }
+            .phone-notch {
+                width: 100px;
+                height: 24px;
+                top: 10px;
+            }
+            .phone-balance-card {
+                padding: 16px 14px;
+            }
+            .phone-balance-card .amount {
+                font-size: 1.4rem;
+            }
+            .phone-tx {
+                padding: 8px 10px;
+            }
+            .phone-tx .tx-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 0.85rem;
+            }
+            .phone-tx .tx-name {
+                font-size: 0.72rem;
+            }
+            .phone-tx .tx-category {
+                font-size: 0.62rem;
+            }
+            .phone-tx .tx-amount {
+                font-size: 0.75rem;
+            }
+            .floating-chip {
+                font-size: 0.7rem;
+                padding: 8px 12px;
+            }
+            .cta-banner {
+                padding: 40px 24px;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 24px;
+            }
+            .footer-links {
+                gap: 24px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+            .download-card {
+                padding: 32px 20px;
+            }
+            .download-app-icon {
+                width: 72px;
+                height: 72px;
+                font-size: 2.2rem;
+                border-radius: var(--radius-lg);
+            }
+            .download-app-name {
+                font-size: 1.5rem;
+            }
+            .download-requirements {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 1.7rem;
+            }
+            .hero-title {
+                font-size: 2rem;
+            }
+            .btn-large {
+                padding: 14px 24px;
+                font-size: 0.9rem;
+            }
+            .hero-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .hero-actions .btn {
+                width: 100%;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .floating-chip {
+                display: none;
+            }
+            .phone-mockup {
+                width: 230px;
+                height: 470px;
+            }
+            .phone-balance-card .amount {
+                font-size: 1.2rem;
+            }
+            .phone-tx .tx-name {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Noise Overlay -->
+    <div class="noise-overlay" aria-hidden="true"></div>
+
+    <!-- Background Orbs -->
+    <div class="bg-orbs" aria-hidden="true">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+    </div>
+
+    <!-- ============================================
+    LANDING PAGE VIEW
+    ============================================ -->
+    <div id="landing-view">
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+            <div class="container">
+                <a href="#" class="navbar-brand" aria-label="PennyWise Home">
+                    <div class="brand-icon" aria-hidden="true">💰</div>
+                    <span>PennyWise</span>
+                </a>
+                <div class="navbar-links">
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#testimonials">Reviews</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+                <div class="navbar-cta">
+                    <a href="#download" class="btn btn-primary" data-go-to-download>
+                        <span aria-hidden="true">⬇️</span> Download
+                    </a>
+                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+                        ☰
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#testimonials">Reviews</a>
+                <a href="#faq">FAQ</a>
+                <a href="#download" class="btn btn-primary" data-go-to-download>
+                    <span aria-hidden="true">⬇️</span> Download Now
+                </a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero" id="hero" aria-label="Hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="section-badge"><span class="dot"></span> Trusted by 100K+ users</span>
+                    <h1 class="hero-title">
+                        Every Penny<br>
+                        <span class="text-gradient">Counts.</span>
+                    </h1>
+                    <p class="hero-description">
+                        PennyWise helps you track expenses, create smart budgets, and save more money — all in one beautifully designed app. Take control of your finances today.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#download" class="btn btn-primary btn-large" data-go-to-download>
+                            <span aria-hidden="true">⬇️</span> Download APK — Free
+                        </a>
+                        <a href="#features" class="btn btn-secondary btn-large">
+                            Learn More
+                        </a>
+                    </div>
+                    <div class="hero-trust">
+                        <div class="stars" aria-label="5 out of 5 stars">
+                            ★ ★ ★ ★ ★
+                        </div>
+                        <span class="trust-text">4.9 rating · 100K+ downloads · Free forever</span>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div style="position: relative; display: inline-block;">
+                        <!-- Floating Chips -->
+                        <div class="floating-chip chip-1">
+                            <span class="chip-icon">📈</span> Savings up 24%
+                        </div>
+                        <div class="floating-chip chip-2">
+                            <span class="chip-icon">✅</span> Budget on track
+                        </div>
+                        <div class="floating-chip chip-3">
+                            <span class="chip-icon">💡</span> Smart tip available
+                        </div>
+
+                        <!-- Phone Mockup -->
+                        <div class="phone-mockup" aria-hidden="true">
+                            <div class="phone-notch"></div>
+                            <div class="phone-screen">
+                                <div class="phone-balance-card">
+                                    <div class="label">Total Balance</div>
+                                    <div class="amount">$12,458.90</div>
+                                    <div class="change">▲ 8.2% this month</div>
+                                </div>
+                                <div class="phone-section-label">Recent Transactions</div>
+                                <div class="phone-transactions">
+                                    <div class="phone-tx">
+                                        <div class="tx-icon green" aria-hidden="true">💼</div>
+                                        <div class="tx-info">
+                                            <div class="tx-name">Salary Deposit</div>
+                                            <div class="tx-category">Income</div>
+                                        </div>
+                                        <div class="tx-amount positive">+$2,500</div>
+                                    </div>
+                                    <div class="phone-tx">
+                                        <div class="tx-icon red" aria-hidden="true">🛒</div>
+                                        <div class="tx-info">
+                                            <div class="tx-name">Whole Foods</div>
+                                            <div class="tx-category">Groceries</div>
+                                        </div>
+                                        <div class="tx-amount negative">-$84.32</div>
+                                    </div>
+                                    <div class="phone-tx">
+                                        <div class="tx-icon gold" aria-hidden="true">🚗</div>
+                                        <div class="tx-info">
+                                            <div class="tx-name">Uber</div>
+                                            <div class="tx-category">Transport</div>
+                                        </div>
+                                        <div class="tx-amount negative">-$18.50</div>
+                                    </div>
+                                    <div class="phone-tx">
+                                        <div class="tx-icon green" aria-hidden="true">🎯</div>
+                                        <div class="tx-info">
+                                            <div class="tx-name">Dividend Payout</div>
+                                            <div class="tx-category">Investments</div>
+                                        </div>
+                                        <div class="tx-amount positive">+$120.00</div>
+                                    </div>
+                                </div>
+                                <div class="phone-bottom-nav">
+                                    <span class="active" aria-hidden="true">🏠</span>
+                                    <span aria-hidden="true">📊</span>
+                                    <span aria-hidden="true">➕</span>
+                                    <span aria-hidden="true">🎯</span>
+                                    <span aria-hidden="true">👤</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section" aria-label="Statistics">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card reveal">
+                        <div class="stat-number">100K+</div>
+                        <div class="stat-label">Downloads</div>
+                    </div>
+                    <div class="stat-card reveal reveal-delay-1">
+                        <div class="stat-number">4.9★</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                    <div class="stat-card reveal reveal-delay-2">
+                        <div class="stat-number">$2M+</div>
+                        <div class="stat-label">Saved by Users</div>
+                    </div>
+                    <div class="stat-card reveal reveal-delay-3">
+                        <div class="stat-number">50K+</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features" aria-label="Features">
+            <div class="container">
+                <div class="text-center reveal">
+                    <span class="section-badge"><span class="dot"></span> Features</span>
+                    <h2 class="section-title">Everything You Need<br>to <span class="text-gradient">Master Money</span></h2>
+                    <p class="section-subtitle">Powerful tools designed to help you understand, manage, and grow your finances with confidence.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card reveal">
+                        <div class="feature-icon" aria-hidden="true">📊</div>
+                        <h3 class="feature-title">Smart Expense Tracking</h3>
+                        <p class="feature-description">Automatically categorize transactions and get real-time insights into where your money goes — down to the penny.</p>
+                    </div>
+                    <div class="feature-card reveal reveal-delay-1">
+                        <div class="feature-icon" aria-hidden="true">🎯</div>
+                        <h3 class="feature-title">Custom Budgets</h3>
+                        <p class="feature-description">Set monthly budgets for any category. Get alerts when you're close to limits and adjust on the fly.</p>
+                    </div>
+                    <div class="feature-card reveal reveal-delay-2">
+                        <div class="feature-icon" aria-hidden="true">💡</div>
+                        <h3 class="feature-title">Smart Insights</h3>
+                        <p class="feature-description">AI-powered recommendations that help you spot spending patterns, save more, and reach your goals faster.</p>
+                    </div>
+                    <div class="feature-card reveal reveal-delay-3">
+                        <div class="feature-icon" aria-hidden="true">🔔</div>
+                        <h3 class="feature-title">Bill Reminders</h3>
+                        <p class="feature-description">Never miss a due date again. Get notified before bills are due and avoid late fees automatically.</p>
+                    </div>
+                    <!-- Changed from "Bank-Grade Security" to "Enterprise-Grade Security" -->
+                    <div class="feature-card reveal reveal-delay-4">
+                        <div class="feature-icon" aria-hidden="true">🔒</div>
+                        <h3 class="feature-title">Enterprise-Grade Security</h3>
+                        <p class="feature-description">Your data is encrypted with AES-256 and never sold. Privacy is not an option — it's a guarantee.</p>
+                    </div>
+                    <div class="feature-card reveal reveal-delay-4">
+                        <div class="feature-icon" aria-hidden="true">📱</div>
+                        <h3 class="feature-title">Works Offline</h3>
+                        <p class="feature-description">All features work 100% offline. Sync when you're ready. Your data is always accessible, anywhere.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-section" id="how-it-works" aria-label="How It Works">
+            <div class="container">
+                <div class="text-center reveal">
+                    <span class="section-badge"><span class="dot"></span> How It Works</span>
+                    <h2 class="section-title">Get Started in <span class="text-gradient">3 Easy Steps</span></h2>
+                    <p class="section-subtitle">From download to financial mastery in under 5 minutes.</p>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-card reveal">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Download & Install</h3>
+                        <p class="step-description">Download the APK, install it on your Android device, and create your free account in seconds.</p>
+                    </div>
+                    <!-- Changed step 2 title and description to avoid bank references -->
+                    <div class="step-card reveal reveal-delay-1">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Import & Organize</h3>
+                        <p class="step-description">Import your transactions from CSV files or enter them manually. PennyWise automatically organizes everything for you.</p>
+                    </div>
+                    <div class="step-card reveal reveal-delay-2">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Track & Save</h3>
+                        <p class="step-description">Watch your savings grow as PennyWise helps you make smarter money decisions every single day.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section" id="testimonials" aria-label="Testimonials">
+            <div class="container">
+                <div class="text-center reveal">
+                    <span class="section-badge"><span class="dot"></span> Testimonials</span>
+                    <h2 class="section-title">What Our <span class="text-gradient">Users Say</span></h2>
+                    <p class="section-subtitle">Join thousands of happy users who've transformed their finances with PennyWise.</p>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card reveal">
+                        <div class="testimonial-stars" aria-label="5 stars">★★★★★</div>
+                        <p class="testimonial-text">"PennyWise completely changed how I manage my money. I've saved over $3,000 in just three months by seeing exactly where my spending goes. The interface is stunning!"</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar" aria-hidden="true">S</div>
+                            <div>
+                                <div class="testimonial-name">Sarah Mitchell</div>
+                                <div class="testimonial-role">Marketing Manager</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card reveal reveal-delay-1">
+                        <div class="testimonial-stars" aria-label="5 stars">★★★★★</div>
+                        <p class="testimonial-text">"The budget alerts are a game-changer. I never overspend on groceries anymore. This app pays for itself — and it's free! Unbelievable value."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar" aria-hidden="true">J</div>
+                            <div>
+                                <div class="testimonial-name">James Chen</div>
+                                <div class="testimonial-role">Software Engineer</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card reveal reveal-delay-2">
+                        <div class="testimonial-stars" aria-label="5 stars">★★★★★</div>
+                        <p class="testimonial-text">"I've tried Mint, YNAB, and others. PennyWise is by far the most intuitive and beautiful. The offline mode is perfect for my travels. I recommend it to everyone."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar" aria-hidden="true">M</div>
+                            <div>
+                                <div class="testimonial-name">Maria Garcia</div>
+                                <div class="testimonial-role">Travel Blogger</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section" id="faq" aria-label="Frequently Asked Questions">
+            <div class="container">
+                <div class="text-center reveal">
+                    <span class="section-badge"><span class="dot"></span> FAQ</span>
+                    <h2 class="section-title">Frequently Asked <span class="text-gradient">Questions</span></h2>
+                    <p class="section-subtitle">Everything you need to know about PennyWise.</p>
+                </div>
+                <div class="faq-list">
+                    <div class="faq-item reveal">
+                        <button class="faq-question" aria-expanded="false">
+                            Is PennyWise really free?
+                            <span class="faq-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            Yes! PennyWise is completely free to download and use. We believe financial tools should be accessible to everyone. Premium features are optional and never required.
+                        </div>
+                    </div>
+                    <div class="faq-item reveal reveal-delay-1">
+                        <button class="faq-question" aria-expanded="false">
+                            Is my financial data secure?
+                            <span class="faq-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            Absolutely. We use AES-256 encryption for all data at rest and in transit. Your financial information never leaves your device unless you explicitly choose to sync. We don't sell data — ever.
+                        </div>
+                    </div>
+                    <div class="faq-item reveal reveal-delay-2">
+                        <button class="faq-question" aria-expanded="false">
+                            Does it work without an internet connection?
+                            <span class="faq-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            Yes! PennyWise is designed to work fully offline. All your budgets, transactions, and insights are stored locally. You can sync when you're back online.
+                        </div>
+                    </div>
+                    <!-- Modified answer to remove bank feed reference -->
+                    <div class="faq-item reveal reveal-delay-3">
+                        <button class="faq-question" aria-expanded="false">
+                            Can I import my existing transactions?
+                            <span class="faq-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            Yes, you can import transactions from CSV files or manually add them. We make migration simple and painless.
+                        </div>
+                    </div>
+                    <div class="faq-item reveal reveal-delay-4">
+                        <button class="faq-question" aria-expanded="false">
+                            What devices are supported?
+                            <span class="faq-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            PennyWise is currently available for Android devices (APK download). iOS and web versions are in development and coming soon.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section" aria-label="Call to Action">
+            <div class="container">
+                <div class="cta-banner reveal">
+                    <h2 class="cta-title">Start Saving with PennyWise Today</h2>
+                    <p class="cta-description">Download the APK now and take the first step toward financial freedom.</p>
+                    <a href="#download" class="btn btn-gold btn-large" data-go-to-download>
+                        <span aria-hidden="true">⬇️</span> Download Free APK
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer" role="contentinfo">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <div class="brand-icon" aria-hidden="true">💰</div>
+                        <span>PennyWise</span>
+                    </div>
+                    <div class="footer-links">
+                        <div class="footer-column">
+                            <h4>Product</h4>
+                            <a href="#features">Features</a>
+                            <a href="#how-it-works">How It Works</a>
+                            <a href="#download" data-go-to-download>Download</a>
+                        </div>
+                        <div class="footer-column">
+                            <h4>Company</h4>
+                            <a href="#testimonials">Reviews</a>
+                            <a href="#faq">FAQ</a>
+                            <a href="#">Contact</a>
+                        </div>
+                        <div class="footer-column">
+                            <h4>Legal</h4>
+                            <a href="#">Privacy Policy</a>
+                            <a href="#">Terms of Service</a>
+                            <a href="#">Security</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <span>© 2026 PennyWise. All rights reserved.</span>
+                    <span>Made with ❤️ for smart savers everywhere.</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ============================================
+    DOWNLOAD PAGE VIEW
+    ============================================ -->
+    <div class="download-view" id="downloadView" role="main" aria-label="Download PennyWise">
+        <div class="download-nav">
+            <div class="container">
+                <a href="#hero" class="navbar-brand" id="downloadBackBtn" aria-label="Back to homepage">
+                    <div class="brand-icon" aria-hidden="true">💰</div>
+                    <span>PennyWise</span>
+                </a>
+                <a href="#hero" class="btn btn-secondary" id="downloadBackLink">
+                    ← Back to Home
+                </a>
+            </div>
+        </div>
+        <div class="download-content">
+            <div class="download-card">
+                <div class="download-app-icon" aria-hidden="true">💰</div>
+                <h1 class="download-app-name">PennyWise</h1>
+                <span class="download-version">v2.4.1 · Latest</span>
+                <div class="download-meta">
+                    <div class="download-meta-item">
+                        <div class="meta-value">28 MB</div>
+                        <div class="meta-label">File Size</div>
+                    </div>
+                    <div class="download-meta-item">
+                        <div class="meta-value">Android 7.0+</div>
+                        <div class="meta-label">Required</div>
+                    </div>
+                    <div class="download-meta-item">
+                        <div class="meta-value">Free</div>
+                        <div class="meta-label">Price</div>
+                    </div>
+                    <div class="download-meta-item">
+                        <div class="meta-value">4.9★</div>
+                        <div class="meta-label">Rating</div>
+                    </div>
+                </div>
+                <div class="download-btn-wrapper">
+                    <a href="#" class="btn btn-primary btn-large" id="downloadApkBtn" download="pennywise-v2.4.1.apk"
+                    style="width: 100%;"
+                    onclick="handleDownload(event)">
+                    <span aria-hidden="true">⬇️</span> Download APK Now
+                </a>
+                <div class="download-progress" id="downloadProgress">
+                    <div class="download-progress-bar" id="downloadProgressBar"></div>
+                </div>
+            </div>
+            <div class="download-requirements">
+                <div class="download-req-item">
+                    <span class="req-icon" aria-hidden="true">🛡️</span> AES-256 Encrypted
+                </div>
+                <div class="download-req-item">
+                    <span class="req-icon" aria-hidden="true">📶</span> Works Fully Offline
+                </div>
+                <div class="download-req-item">
+                    <span class="req-icon" aria-hidden="true">🔒</span> No Ads, No Tracking
+                </div>
+                <div class="download-req-item">
+                    <span class="req-icon" aria-hidden="true">🔄</span> Free Updates Forever
+                </div>
+            </div>
+            <p class="download-note">
+                By downloading, you agree to our <a href="#">Terms of Service</a> and
+                <a href="#">Privacy Policy</a>. The APK is verified and safe.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+JAVASCRIPT
+============================================ -->
+<script>
+    (function() {
+        'use strict';
+
+        // ============ DOM ELEMENTS ============
+        const navbar = document.getElementById('navbar');
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const landingView = document.getElementById('landing-view');
+        const downloadView = document.getElementById('downloadView');
+        const downloadBackBtn = document.getElementById('downloadBackBtn');
+        const downloadBackLink = document.getElementById('downloadBackLink');
+        const downloadApkBtn = document.getElementById('downloadApkBtn');
+        const downloadProgress = document.getElementById('downloadProgress');
+        const downloadProgressBar = document.getElementById('downloadProgressBar');
+        const faqItems = document.querySelectorAll('.faq-item');
+        const allDownloadLinks = document.querySelectorAll('[data-go-to-download]');
+        const revealElements = document.querySelectorAll('.reveal');
+
+        // ============ NAVBAR SCROLL EFFECT ============
+        function handleNavbarScroll() {
+            if (window.scrollY > 40) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+        window.addEventListener('scroll', handleNavbarScroll, { passive: true });
+        handleNavbarScroll();
+
+        // ============ MOBILE MENU TOGGLE ============
+        menuToggle.addEventListener('click', function() {
+            const isOpen = mobileMenu.classList.toggle('open');
+            menuToggle.classList.toggle('active');
+            menuToggle.setAttribute('aria-expanded', isOpen);
+            menuToggle.textContent = isOpen ? '✕' : '☰';
+        });
+
+        // Close mobile menu when clicking a link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                menuToggle.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.textContent = '☰';
+            });
+        });
+
+        // Close mobile menu on resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                mobileMenu.classList.remove('open');
+                menuToggle.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.textContent = '☰';
+            }
+        });
+
+        // ============ NAVIGATION TO DOWNLOAD VIEW ============
+        function goToDownload(e) {
+            e.preventDefault();
+            // Hide landing view, show download view
+            landingView.style.display = 'none';
+            downloadView.classList.add('active');
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            // Update hash
+            if (window.location.hash !== '#download') {
+                history.pushState(null, '', '#download');
+            }
+            // Close mobile menu
+            mobileMenu.classList.remove('open');
+            menuToggle.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            menuToggle.textContent = '☰';
+        }
+
+        function goToHome(e) {
+            if (e) e.preventDefault();
+            downloadView.classList.remove('active');
+            landingView.style.display = '';
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            if (window.location.hash !== '') {
+                history.pushState(null, '', window.location.pathname);
+            }
+        }
+
+        // Attach to all download links
+        allDownloadLinks.forEach(link => {
+            link.addEventListener('click', goToDownload);
+        });
+
+        // Back buttons
+        downloadBackBtn.addEventListener('click', goToHome);
+        downloadBackLink.addEventListener('click', goToHome);
+
+        // Handle hash change for browser back/forward
+        window.addEventListener('hashchange', function() {
+            if (window.location.hash === '#download') {
+                landingView.style.display = 'none';
+                downloadView.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            } else {
+                downloadView.classList.remove('active');
+                landingView.style.display = '';
+            }
+        });
+
+        // On initial load, check hash
+        if (window.location.hash === '#download') {
+            landingView.style.display = 'none';
+            downloadView.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+
+        // ============ DOWNLOAD PROGRESS SIMULATION ============
+        function handleDownload(e) {
+            // Allow the download to proceed normally
+            // Show progress bar animation
+            downloadProgress.classList.add('visible');
+            downloadProgressBar.style.width = '0%';
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15 + 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        downloadProgress.classList.remove('visible');
+                        downloadProgressBar.style.width = '0%';
+                        // Show success message
+                        showDownloadSuccess();
+                    }, 600);
+                }
+                downloadProgressBar.style.width = progress + '%';
+            }, 150);
+        }
+
+        function showDownloadSuccess() {
+            const originalText = downloadApkBtn.innerHTML;
+            downloadApkBtn.innerHTML = '<span aria-hidden="true">✅</span> Download Started!';
+            downloadApkBtn.style.background = 'var(--gradient-gold)';
+            downloadApkBtn.style.color = '#1a1a1a';
+
+            setTimeout(() => {
+                downloadApkBtn.innerHTML = originalText;
+                downloadApkBtn.style.background = '';
+                downloadApkBtn.style.color = '';
+            }, 2500);
+        }
+
+        // Attach to download button
+        downloadApkBtn.addEventListener('click', function(e) {
+            // If href is '#', prevent default and show progress
+            // In production, replace with actual APK URL
+            const href = this.getAttribute('href');
+            if (href === '#') {
+                e.preventDefault();
+                handleDownload(e);
+            } else {
+                // Still show progress animation
+                handleDownload(e);
+            }
+        });
+
+        // ============ FAQ ACCORDION ============
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+
+                // Close all items
+                faqItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.faq-question').setAttribute('aria-expanded',
+                        'false');
+                });
+
+                // Toggle clicked item
+                if (!isActive) {
+                    item.classList.add('active');
+                    question.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+        // ============ SCROLL REVEAL (Intersection Observer) ============
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -40px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Optional: unobserve after revealing for performance
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        revealElements.forEach(el => {
+            observer.observe(el);
+        });
+
+        // ============ SMOOTH SCROLL FOR ANCHOR LINKS ============
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href === '#download') return; // Skip for download links (handled separately)
+
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    const offsetTop = target.getBoundingClientRect().top + window.scrollY -
+                        parseInt(getComputedStyle(document.documentElement).getPropertyValue(
+                            '--nav-height'));
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        console.log('%c💰 PennyWise — Smart Budgeting Made Simple',
+            'font-size: 16px; font-weight: bold; color: #10B981;');
+        console.log('%cDownload the APK and start saving today!',
+            'font-size: 12px; color: #A1A1AA;');
+    })();
+</script>
+</body>
+</html>
